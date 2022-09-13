@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Oder")
-public class OderEntity implements Serializable, Comparable<OderEntity> {
+public class OderEntity implements Comparable<OderEntity> {
     @Id
     @Column(name = "oderid")
     private Long oderid;

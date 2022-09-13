@@ -6,6 +6,7 @@ import com.example.JavaTokenWeb_ver1.services.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class AccountController {
 
     // CREATE NEW USER
     @PostMapping("/add")
-    public AccountEntity createAccount(@RequestBody AccountEntity account) {
+    public AccountEntity createAccount(@Valid @RequestBody AccountEntity account) {
         return iAccountService.addAccount(account);
     }
 
@@ -50,7 +51,7 @@ public class AccountController {
 
     //EDIT BY USERNAME
     @PutMapping("/edit/{username}")
-    public AccountEntity updateAcc(@RequestBody AccountEntity updateUserById, @PathVariable String username) {
+    public AccountEntity updateAcc(@Valid @RequestBody  AccountEntity updateUserById, @PathVariable String username) {
 
             return iAccountService.updateAccount(updateUserById);
     }

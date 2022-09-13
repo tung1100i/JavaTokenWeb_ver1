@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Table(name = "Oder_Detail")
 
-public class OderDetailEntity implements Serializable, Comparable<OderDetailEntity> {
+public class OderDetailEntity implements  Comparable<OderDetailEntity> {
     @Id
     @Column(name = "detailid")
     private Long detailid;

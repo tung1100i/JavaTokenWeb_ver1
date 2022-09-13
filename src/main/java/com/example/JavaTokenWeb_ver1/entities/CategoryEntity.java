@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Category")
-public class CategoryEntity  implements Serializable,Comparable<CategoryEntity> {
+public class CategoryEntity  implements Comparable<CategoryEntity> {
     @Id
     @Column(name = "categoryid")
     private String categoryid;

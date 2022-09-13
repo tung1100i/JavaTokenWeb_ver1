@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Product")
-public class ProductEntity implements Serializable, Comparable<ProductEntity> {
+public class ProductEntity implements  Comparable<ProductEntity> {
     @Id
     @Column(name = "productid", insertable = false, updatable = false)
     private Long productid;

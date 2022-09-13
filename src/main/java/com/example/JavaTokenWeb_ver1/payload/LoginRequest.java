@@ -19,7 +19,4 @@ public class LoginRequest {
 
     @NotBlank
     private String password;
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

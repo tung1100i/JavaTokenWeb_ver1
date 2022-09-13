@@ -4,12 +4,14 @@ import com.example.JavaTokenWeb_ver1.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -18,20 +20,42 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class Config extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().ignoringAntMatchers("/api/login")
-                .and()
+//                .csrf().ignoringAntMatchers("/login")
+                .csrf().disable()
                 .cors() // Ngăn chặn request từ một domain khác
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/api/login").permitAll()
-                .antMatchers("/accounts/**/**").hasAuthority("ADMIN")
-                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.GET,"/", "/home", "/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.PUT,"/accounts/edit/{username}").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST,"/accounts/add").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET,"/accounts/**").hasAuthority("ADMIN")
+                .anyRequest().authenticated().
+                and().
+                exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);;
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
 
@@ -57,15 +81,7 @@ public class Config extends WebSecurityConfigurerAdapter {
 //    }
 
     // khai báo Bean
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -74,8 +90,7 @@ public class Config extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Autowired
-    private AccountService accountService;
+
 
     // sử dụng Bean
     @Override

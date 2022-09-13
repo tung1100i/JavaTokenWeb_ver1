@@ -3,11 +3,14 @@ package com.example.JavaTokenWeb_ver1.services;
 import com.example.JavaTokenWeb_ver1.entities.AccountEntity;
 import com.example.JavaTokenWeb_ver1.repositories.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,15 +30,19 @@ public class AccountService implements IAccountService, UserDetailsService {
 
     @Override
     public AccountEntity addAccount(AccountEntity account) {
-        AccountEntity newaccount = new AccountEntity();
-        newaccount.setUsername(account.getUsername());
-        String newpass = account.bCryptPasswordEncoder(account.getPassword()).encode(account.getPassword());
-        newaccount.setPassword(newpass);
-        newaccount.setFullname(account.getFullname());
-        newaccount.setRole(account.getRole());
-        accountRepo.save(newaccount);
+        if (accountRepo.existsById(account.getUsername())) {
+            throw new UsernameNotFoundException("Username already exists");
+        } else {
+            AccountEntity newaccount = new AccountEntity();
+            newaccount.setUsername(account.getUsername());
+            String newpass = account.bCryptPasswordEncoder(account.getPassword()).encode(account.getPassword());
+            newaccount.setPassword(newpass);
+            newaccount.setFullname(account.getFullname());
+            newaccount.setRole(account.getRole());
+            accountRepo.save(newaccount);
+            return newaccount;
+        }
 
-        return newaccount;
     }
 
     @Override
@@ -70,6 +77,8 @@ public class AccountService implements IAccountService, UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("user not found");
         }
-        return user;
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),user.getAuthorities());
     }
+
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class LodaRestController {
 
     @Autowired
@@ -24,14 +24,13 @@ public class LodaRestController {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
-    @PostMapping("/login")
+    @PostMapping("login")
     public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         // Xác thực từ username và password.
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
-//                        loginRequest.bCryptPasswordEncoder().encode(loginRequest.getPassword())
                         loginRequest.getPassword()
                 )
         );
@@ -41,7 +40,7 @@ public class LodaRestController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Trả về jwt cho người dùng.
-        String jwt = tokenProvider.generateToken((AccountEntity) authentication.getPrincipal());
+        String jwt = tokenProvider.generateToken((org.springframework.security.core.userdetails.User) authentication.getPrincipal());
         return new LoginResponse(jwt);
     }
 
