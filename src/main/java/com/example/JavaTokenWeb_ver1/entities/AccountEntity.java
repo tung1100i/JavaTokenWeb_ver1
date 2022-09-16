@@ -1,9 +1,7 @@
 package com.example.JavaTokenWeb_ver1.entities;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,8 +9,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Data
 @Entity
@@ -22,14 +22,23 @@ import java.util.Collections;
 public class AccountEntity implements Comparable<AccountEntity>, UserDetails {
 
     @Id
-    @Pattern(regexp = "^[a-zA-Z0-9]{5,}", message = "Username must be alphanumeric characters")
     @Column(name = "username")
     private String username;
 
-    //    @Pattern(regexp = "^[\b]{1,}",message = "Password must be alphanumeric characters")
-//    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$",message = "Password must be alphanumeric characters")
     @Column(name = "password")
     private String password;
+
+
+
+    @OneToMany(mappedBy = "usernameOder", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude // không sử dụng trường này trong equals và hashcode
+    @ToString.Exclude // Khoonhg sử dụng trong toString()
+    private List<OderEntity> oderEntities;
+
+//    @OneToMany(mappedBy = "usernameOder", cascade = CascadeType.ALL)
+//    @EqualsAndHashCode.Exclude // không sử dụng trường này trong equals và hashcode
+//    @ToString.Exclude // Khoonhg sử dụng trong toString()
+//    private List<OderEntity> oderEntities;
 
     @Pattern(regexp = "^[a-zA-Z\s]*", message = "Fullname must be alphanumeric characters")
     @Column(name = "fullname")

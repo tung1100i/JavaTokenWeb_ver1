@@ -1,12 +1,11 @@
 package com.example.JavaTokenWeb_ver1.entities;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -18,8 +17,13 @@ public class CategoryEntity  implements Comparable<CategoryEntity> {
     @Column(name = "categoryid")
     private String categoryid;
 
-    private String name;
+    @Column(name = "category_name")
+    private String category_name;
 
+    @OneToMany(mappedBy = "categoryid", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude // không sử dụng trường này trong equals và hashcode
+    @ToString.Exclude // Khoonhg sử dụng trong toString()
+    private Collection<ProductEntity> productEntities;
     @Override
     public int compareTo(CategoryEntity o) {
         return  (this.categoryid.compareTo(o.getCategoryid()));

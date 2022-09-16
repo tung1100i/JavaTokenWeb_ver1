@@ -24,4 +24,6 @@ public interface IAccountService {
 
     //UPDATE
     AccountEntity updateAccount(AccountEntity account);
+//    String findTransByusername(String username);
+
 }

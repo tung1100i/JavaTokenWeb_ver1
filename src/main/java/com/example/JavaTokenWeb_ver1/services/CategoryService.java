@@ -39,7 +39,7 @@ public class CategoryService implements ICategoryService {
     public CategoryEntity updateCateID(CategoryEntity newcateid) {
         CategoryEntity categoryUpdate = new CategoryEntity();
         categoryUpdate.setCategoryid(newcateid.getCategoryid());
-        categoryUpdate.setName(newcateid.getName());
+        categoryUpdate.setCategory_name(newcateid.getCategory_name());
         return categoryRepo.save(categoryUpdate);
     }
 

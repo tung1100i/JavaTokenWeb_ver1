@@ -3,14 +3,11 @@ package com.example.JavaTokenWeb_ver1.services;
 import com.example.JavaTokenWeb_ver1.entities.AccountEntity;
 import com.example.JavaTokenWeb_ver1.repositories.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +16,6 @@ public class AccountService implements IAccountService, UserDetailsService {
 
     @Autowired
     AccountRepo accountRepo;
-
-//    @Bean
-
 
     @Override
     public List<AccountEntity> findAll() {
@@ -69,6 +63,11 @@ public class AccountService implements IAccountService, UserDetailsService {
         accountRepo.save(updateAcc);
         return updateAcc;
     }
+
+//    @Override
+//    public String findTransByusername(String username) {
+//        return accountRepo.findTrans(username);
+//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
